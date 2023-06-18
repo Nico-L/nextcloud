@@ -31,32 +31,6 @@ services:
     # networks: # Is needed when you want to create the nextcloud-aio network with ipv6-support using this file, see the network config at the bottom of the file
       # - nextcloud-aio # Is needed when you want to create the nextcloud-aio network with ipv6-support using this file, see the network config at the bottom of the file
 
-  # # Optional: Caddy reverse proxy. See https://github.com/nextcloud/all-in-one/blob/main/reverse-proxy.md
-  # # You can find further examples here: https://github.com/nextcloud/all-in-one/discussions/588
-  # caddy:
-  #   image: caddy:alpine
-  #   restart: always
-  #   container_name: caddy
-  #   volumes:
-  #     - ./Caddyfile:/etc/caddy/Caddyfile
-  #     - ./certs:/certs
-  #     - ./config:/config
-  #     - ./data:/data
-  #     - ./sites:/srv
-  #   network_mode: "host"
-
 volumes:
   nextcloud_aio_mastercontainer:
     name: nextcloud_aio_mastercontainer # This line is not allowed to be changed as otherwise the built-in backup solution will not work
-
-# # Optional: If you need ipv6, follow step 1 and 2 of https://github.com/nextcloud/all-in-one/blob/main/docker-ipv6-support.md first and then uncomment the below config in order to activate ipv6 for the internal nextcloud-aio network.
-# # Please make sure to uncomment also the networking lines of the mastercontainer above in order to actually create the network with docker-compose
-# networks:
-#   nextcloud-aio:
-#     name: nextcloud-aio # This line is not allowed to be changed as otherwise the created network will not be used by the other containers of AIO
-#     driver: bridge
-#     enable_ipv6: true
-#     ipam:
-#       driver: default
-#       config:
-#         - subnet: fd12:3456:789a:2::/64 # IPv6 subnet to use
