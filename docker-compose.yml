@@ -11,8 +11,8 @@ services:
       - ./nextcloud-data-db:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: mydatabase
-      MYSQL_USER: user
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
       MYSQL_PASSWORD: password
 
   nextcloud-redis:
