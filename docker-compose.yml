@@ -6,3 +6,10 @@ services:
     restart: always
     volumes:
       - ./data:/var/www/html
+    environment:
+      TZ: Europe/Paris
+      NEXTCLOUD_TRUSTED_DOMAINS: test.luchier.fr
+      TRUSTED_PROXIES: test.luchier.fr
+      OVERWRITECLIURL: https://test.luchier.fr
+      OVERWRITEPROTOCOL: https
+      OVERWRITEHOST: test.luchier.fr
