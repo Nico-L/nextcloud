@@ -9,10 +9,10 @@ services:
     volumes:
      - ./db:/var/lib/mysql
     environment:
-     - MARIADB_ROOT_PASSWORD=$NEXTCLOUD_MYSQL_ROOT_PASSWORD  # Mot de passe de l'utilisateur root de mariadb
-     - MARIADB_DATABASE=$NEXTCLOUD_MYSQL_DATABASE  # Nom de la base de données à créer à l'initialisation du conteneur
-     - MARIADB_USER=$NEXTCLOUD_MYSQL_USER  # Nom de l'utilisateur de la base de données créée
-     - MARIADB_PASSWORD=$NEXTCLOUD_MYSQL_PASSWORD  # Mot de passe de l'utilisateur créé
+     - MARIADB_ROOT_PASSWORD=${NEXTCLOUD_MYSQL_ROOT_PASSWORD}  # Mot de passe de l'utilisateur root de mariadb
+     - MARIADB_DATABASE=${NEXTCLOUD_MYSQL_DATABASE}  # Nom de la base de données à créer à l'initialisation du conteneur
+     - MARIADB_USER=${NEXTCLOUD_MYSQL_USER}  # Nom de l'utilisateur de la base de données créée
+     - MARIADB_PASSWORD=${NEXTCLOUD_MYSQL_PASSWORD}  # Mot de passe de l'utilisateur créé
  
   nextcloud_app:
     image: nextcloud
@@ -25,6 +25,6 @@ services:
      - ./data:/var/www/html
     environment:
      - MYSQL_HOST=nextcloud_db  # Nom du conteneur de la base de données
-     - MYSQL_DATABASE=$NEXTCLOUD_MYSQL_DATABASE  # Nom de la base de données
-     - MYSQL_USER=$NEXTCLOUD_MYSQL_USER  # Nom de l'utilisateur de la base de données
-     - MYSQL_PASSWORD=$NEXTCLOUD_MYSQL_PASSWORD  # Mot de passe de l'utilisateur de la base de données
+     - MYSQL_DATABASE=${NEXTCLOUD_MYSQL_DATABASE}  # Nom de la base de données
+     - MYSQL_USER=${NEXTCLOUD_MYSQL_USER}  # Nom de l'utilisateur de la base de données
+     - MYSQL_PASSWORD=${NEXTCLOUD_MYSQL_PASSWORD}  # Mot de passe de l'utilisateur de la base de données
