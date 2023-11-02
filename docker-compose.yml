@@ -1,30 +1,51 @@
-version: '3.8'
- 
+version: "3.8"
 services:
-  nextcloud_db:
-    image: mariadb
-    container_name: nextcloud_db
-    restart: always
+  nextcloud-db:
+    image: mariadb:latest
+    container_name: nextcloud-db
+    hostname: nextcloud-db
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: unless-stopped
+    env_file: .env
     volumes:
-     - ./db:/var/lib/mysql
+      - ./nextcloud-data-db:/var/lib/mysql
     environment:
-     - MARIADB_ROOT_PASSWORD=${NEXTCLOUD_MYSQL_ROOT_PASSWORD}  # Mot de passe de l'utilisateur root de mariadb
-     - MARIADB_DATABASE=${NEXTCLOUD_MYSQL_DATABASE}  # Nom de la base de données à créer à l'initialisation du conteneur
-     - MARIADB_USER=${NEXTCLOUD_MYSQL_USER}  # Nom de l'utilisateur de la base de données créée
-     - MARIADB_PASSWORD=${NEXTCLOUD_MYSQL_PASSWORD}  # Mot de passe de l'utilisateur créé
- 
-  nextcloud_app:
-    image: nextcloud
-    restart: always
-    ports:
-     - 3020:80
-    links:
-     - nextcloud_db
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+
+  nextcloud-redis:
+    image: redis:latest
+    container_name: nextcloud-redis
+    env_file: .env
+    hostname: nextcloud-redis
+    restart: unless-stopped
+
+  nextcloud-app:
+    image: nextcloud:fpm
+    container_name: nextcloud-app
+    hostname: nextcloud-app
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      - nextcloud-db
+      - nextcloud-redis
     volumes:
-     - ./data:/var/www/html
-    environment:
-     - MYSQL_HOST=nextcloud_db  # Nom du conteneur de la base de données
-     - MYSQL_DATABASE=${NEXTCLOUD_MYSQL_DATABASE}  # Nom de la base de données
-     - MYSQL_USER=${NEXTCLOUD_MYSQL_USER}  # Nom de l'utilisateur de la base de données
-     - MYSQL_PASSWORD=${NEXTCLOUD_MYSQL_PASSWORD}  # Mot de passe de l'utilisateur de la base de données
+      - ./nextcloud-data/:/var/www/html
+      # Uncomment and specify your data directory (if you have a mounted hard drive)
+      # !! ALWAYS make a backup of your data before such manipulations !!
+      # - /path/to/data/directory:/var/www/html/data
+
+  nextcloud-cron:
+    image: nextcloud:fpm
+    container_name: nextcloud-cron
+    hostname: nextcloud-cron
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./nextcloud-data/:/var/www/html
+    entrypoint: /cron.sh
+    depends_on:
+      - nextcloud-db
+      - nextcloud-redis
