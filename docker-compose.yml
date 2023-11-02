@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   nextcloud_app:
-    image: nextcloud
+    image: nextcloud:fpm
     restart: always
     volumes:
       - ./data:/var/www/html
