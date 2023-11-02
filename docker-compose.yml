@@ -1,49 +1,7 @@
-version: "3.8"
-services:
-  nextcloud-db:
-    image: mariadb:latest
-    container_name: nextcloud-db
-    hostname: nextcloud-db
-    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
-    restart: unless-stopped
-    volumes:
-      - ./nextcloud-data-db:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
-      - MYSQL_PASSWORD=password
-      - MARIADB_ROOT_PASSWORD=password
-
-  nextcloud-redis:
-    image: redis:latest
-    container_name: nextcloud-redis
-    hostname: nextcloud-redis
-    restart: unless-stopped
-
-  nextcloud-app:
+nextcloud_app:
     image: nextcloud:fpm
-    container_name: nextcloud-app
-    hostname: nextcloud-app
-    restart: unless-stopped
-    depends_on:
-      - nextcloud-db
-      - nextcloud-redis
+    restart: always
+    ports:
+      - 3020:80
     volumes:
-      - ./nextcloud-data/:/var/www/html
-      # Uncomment and specify your data directory (if you have a mounted hard drive)
-      # !! ALWAYS make a backup of your data before such manipulations !!
-      # - /path/to/data/directory:/var/www/html/data
-
-  nextcloud-cron:
-    image: nextcloud:fpm
-    container_name: nextcloud-cron
-    hostname: nextcloud-cron
-    restart: unless-stopped
-    env_file: .env
-    volumes:
-      - ./nextcloud-data/:/var/www/html
-    entrypoint: /cron.sh
-    depends_on:
-      - nextcloud-db
-      - nextcloud-redis
+      - ./data:/var/www/html
