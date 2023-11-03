@@ -19,8 +19,6 @@ services:
     restart: always
     #ports:
     #  - $NEXTCLOUD_PORT:80
-    links:
-      - nextcloud_db
     volumes:
       - ./data:/var/www/html
     links:
