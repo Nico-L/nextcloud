@@ -23,7 +23,7 @@ services:
       - nextcloud_db
     volumes:
       - ./data:/var/www/html
-    depends_on:
+    links:
       - nextcloud_db
     #environment:
     #  - MYSQL_HOST=nextcloud_db  # Nom du conteneur de la base de données
