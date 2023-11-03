@@ -23,8 +23,17 @@ services:
       - ./data:/var/www/html
     links:
       - nextcloud_db
+      - cache
     #environment:
     #  - MYSQL_HOST=nextcloud_db  # Nom du conteneur de la base de données
     #  - MYSQL_DATABASE=$NEXTCLOUD_MYSQL_DATABASE  # Nom de la base de données
     #  - MYSQL_USER=$NEXTCLOUD_MYSQL_USER  # Nom de l'utilisateur de la base de données
     #  - MYSQL_PASSWORD=$NEXTCLOUD_MYSQL_PASSWORD  # Mot de passe de l'utilisateur de la base de données
+    
+  cache:
+   container_name: nextcloud-redis
+   image: redis:7-alpine
+   restart: unless-stopped
+   command: redis-server --save 20 1 --loglevel warning --requirepass ${MOT_DE_PASSE_BALEZE}
+   volumes:
+    - ./redis:/data
